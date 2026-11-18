@@ -159,7 +159,9 @@ function linuxTrimOnce() {
                 const code = (err as NodeJS.ErrnoException).code;
                 if (code === "EPERM" || code === "EACCES") denied++;
             }
-        } catch {}
+        } catch {
+            continue;
+        }
     }
     linuxDenied = denied;
 }
@@ -270,10 +272,7 @@ export async function stopLimiter(_: IpcMainInvokeEvent) {
     childExited = true;
 
     if (proc && !proc.killed) {
-        try {
-            proc.kill();
-        } catch {
-        }
+        proc.kill();
     }
 
     if (linuxTimer) {
